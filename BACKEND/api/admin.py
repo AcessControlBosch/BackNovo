@@ -2,41 +2,17 @@ from django.contrib import admin
 from .models import *
 
 class detReleaseMachine(admin.ModelAdmin):
-    list_display = ('id', 'date', 'hour',  'hourFinish', 'idMachineFK','idAssociateFK')
+    list_display = ('id', 'date', 'InitialHour', 'FinishHour', 'idMachineFK','idAssociateFK')
     list_display_links = ('id',)
     search_fields = ('idMachineFK','idAssociateFK',)
     list_per_page = 10
 
 admin.site.register(ReleaseMachine, detReleaseMachine)
 
-class detUser(admin.ModelAdmin):
+class detAssociate(admin.ModelAdmin):
     list_display = ('id', 'name', 'EDV', 'id_card', 'skill', 'skill2', 'adminU')
     list_display_links = ('id',)
     search_fields = ('EDV',)
-    list_per_page = 10
-
-admin.site.register(User, detUser)
-
-class detApprentice(admin.ModelAdmin):
-    list_display = ('id', 'course', 'idApprenticeFK')
-    list_display_links = ('id',)
-    search_fields = ('idApprenticeFK',)
-    list_per_page = 10
-
-admin.site.register(Apprentice, detApprentice)
-
-class detTypeAssociente(admin.ModelAdmin):
-    list_display = ('id', 'type')
-    list_display_links = ('id',)
-    search_fields = ('type',)
-    list_per_page = 10
-
-admin.site.register(typeAssociente, detTypeAssociente)
-
-class detAssociate(admin.ModelAdmin):
-    list_display = ('id', 'type', 'idAssociateFK')
-    list_display_links = ('id',)
-    search_fields = ('idAssociateFK',)
     list_per_page = 10
 
 admin.site.register(Associate, detAssociate)
@@ -66,7 +42,7 @@ class detGreenBook(admin.ModelAdmin):
 admin.site.register(GreenBook, detGreenBook)
 
 class detMaintenance(admin.ModelAdmin):
-    list_display = ('id', 'date', 'hour','idMachineFK', 'idAssociateFK')
+    list_display = ('id', 'date', 'Initialhour','Finishhour','idMachineFK', 'idAssociateFK')
     list_display_links = ('id',)
     search_fields = ('idMachineFK',)
     list_per_page = 10
@@ -81,22 +57,6 @@ class detObservation(admin.ModelAdmin):
 
 admin.site.register(Observation, detObservation)
 
-class detMaintenanceOrder(admin.ModelAdmin):
-    list_display = ('id', 'status', 'idMachineFK', 'idAssociateFK')
-    list_display_links = ('id',)
-    search_fields = ('idMachineFK',)
-    list_per_page = 10
-
-admin.site.register(MaintenanceOrder, detMaintenanceOrder)
-
-class detCourses(admin.ModelAdmin):
-    list_display = ('id', 'name')
-    list_display_links = ('id',)
-    search_fields = ('name',)
-    list_per_page = 10
-
-admin.site.register(Courses, detCourses)
-
 class detAreas(admin.ModelAdmin):
     list_display = ('id', 'name')
     list_display_links = ('id',)
@@ -105,10 +65,10 @@ class detAreas(admin.ModelAdmin):
 
 admin.site.register(Areas, detAreas)
 
-class detRequestLogin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'EDV', 'idAreaFK')
+class detLogin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'edv', 'idAreaFK')
     list_display_links = ('id',)
     search_fields = ('name',)
     list_per_page = 10
 
-admin.site.register(RequestLogin, detRequestLogin)
+admin.site.register(Login, detLogin)

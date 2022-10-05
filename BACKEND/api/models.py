@@ -8,10 +8,15 @@ from django.utils import timezone
 #User._meta.get_field('email').blank = False
 #User._meta.get_field('email').null = False
 
-class User(models.Model):
+class JobPosition(models.Model):
+    # permission_classes = (IsAuthenticated,)
+    typeJob = models.CharField(max_length=25)
+    def __str__(self):
+        return self.typeJob
+
+class Associate(models.Model):
 
     # permission_classes = (IsAuthenticated,)
-
     name = models.CharField(max_length=100)
     EDV = models.CharField(max_length=10)
     id_card = models.CharField(max_length=30, null=True, blank= True, default=0)
@@ -19,41 +24,9 @@ class User(models.Model):
     skill2 = models.BooleanField(default=False)
     adminU = models.BooleanField(default=False)
     birth = models.DateField(default='', null=False, blank=False)
-
+    jobposition = models.ForeignKey(JobPosition, related_name="jobPositon", on_delete=models.CASCADE)
     def __str__(self):
         return self.name
-
-class Courses(models.Model):
-
-    # permission_classes = (IsAuthenticated,)
-
-    name=models.CharField(max_length=25)
-    
-    def __str__(self):
-        return self.name
-
-class Apprentice(models.Model):
-
-    # permission_classes = (IsAuthenticated,)
-
-    course = models.ForeignKey(Courses, related_name="courseApprentice", on_delete=models.CASCADE)
-    idApprenticeFK = models.ForeignKey(User, related_name="userApprentice", on_delete=models.CASCADE, blank=True, null=True)
-
-class typeAssociente(models.Model):
-
-    # permission_classes = (IsAuthenticated,)
-
-    type = models.CharField(max_length=30)
-
-    def __str__(self):
-        return self.type
-
-class Associate(models.Model):
-
-    # permission_classes = (IsAuthenticated,)
-
-    type = models.ForeignKey(typeAssociente, related_name="typeAssociente", on_delete=models.CASCADE)
-    idAssociateFK = models.ForeignKey(User, related_name="userADM", on_delete=models.CASCADE)
 
 class Machine(models.Model):
 
@@ -77,6 +50,12 @@ class Question(models.Model):
     def __str__(self):
         return self.type
 
+class GreenBook(models.Model):
+    idMachineFK = models.ForeignKey(Machine, related_name="machineGreenBook", on_delete=models.CASCADE)
+    typeQuestion = models.ForeignKey(Question, related_name="question", on_delete=models.CASCADE)
+    question = models.CharField(max_length=50)
+
+
 class Areas(models.Model):
 
     # permission_classes = (IsAuthenticated,)
@@ -86,39 +65,20 @@ class Areas(models.Model):
     def __str__(self):
         return self.name
 
-class GreenBook(models.Model):
-
-    # permission_classes = (IsAuthenticated,)
-
-    idMachineFK = models.ForeignKey(Machine, related_name="machineGreenBook", on_delete=models.CASCADE)
-    typeQuestion = models.ForeignKey(Question, related_name="question", on_delete=models.CASCADE)
-    question = models.CharField(max_length=50)
-
 class Maintenance(models.Model):
-
     # permission_classes = (IsAuthenticated,)
-
     date = models.DateField()
-    hour = models.TimeField()
+    Initialhour = models.TimeField()
+    Finishhour = models.TimeField(blank=True, null=True)
     idMachineFK = models.ForeignKey(Machine, related_name="machineMaintenance", on_delete=models.CASCADE)
-    idAssociateFK = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE)
+    idAssociateFK = models.ForeignKey(Associate, related_name="associate", on_delete=models.CASCADE)
 
-class ReleaseMachine(models.Model): 
-
-    # permission_classes = (IsAuthenticated,)
-
+class ReleaseMachine(models.Model):
     date = models.DateField()
-    hour = models.TimeField()
-    hourFinish = models.TimeField(blank=True, null=True)
+    InitialHour = models.TimeField()
+    FinishHour = models.TimeField(blank=True, null=True)
     idMachineFK = models.ForeignKey(Machine, related_name="machineReleaseMachine", on_delete=models.CASCADE)
-    idAssociateFK = models.ForeignKey(User, related_name="userReleaseMachine", on_delete=models.CASCADE)
-
-class QRcode(models.Model):
-
-    # permission_classes = (IsAuthenticated,)
-
-    router_ip = models.CharField(max_length=300)
-    idMachineFK = models.ForeignKey(Machine, related_name="machineQRcode", on_delete=models.CASCADE)
+    idAssociateFK = models.ForeignKey(Associate, related_name="associateReleaseMachine", on_delete=models.CASCADE)
 
 class Observation(models.Model):
 
@@ -126,19 +86,11 @@ class Observation(models.Model):
 
     date = models.DateField()
     hour = models.TimeField() # default='', blank=True, null=True
+    description = models.CharField(max_length=500)
     idMachineFK = models.ForeignKey(Machine, related_name="machineObservation", on_delete=models.CASCADE)
-    idAssociateFK = models.ForeignKey(User, related_name="userObservation", on_delete=models.CASCADE)
+    idAssociateFK = models.ForeignKey(Associate, related_name="associateObservation", on_delete=models.CASCADE)
 
-class MaintenanceOrder(models.Model):
-
-    # permission_classes = (IsAuthenticated,)
-
-    status = models.CharField(max_length=15)
-    idMachineFK = models.ForeignKey(Machine, related_name="machineMaintenanceOrder", on_delete=models.CASCADE)
-    idAssociateFK = models.ForeignKey(User, related_name="userMaintenanceOrder", on_delete=models.CASCADE)
-
-class RequestLogin(models.Model):
-
+class Login(models.Model):
     name = models.CharField(max_length=200)
-    EDV = models.CharField(max_length=15)
-    idAreaFK = models.ForeignKey(Areas, related_name="areas", on_delete=models.CASCADE)
+    edv = models.CharField(max_length=200)
+    idAreaFK = models.ForeignKey(Areas, related_name="areaLogin", on_delete=models.CASCADE)
