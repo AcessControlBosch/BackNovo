@@ -52,6 +52,8 @@ class JobPositionAPI(APIView):
         jobPosition.delete()
         return Response({"msg": "Apagado com sucesso"})
 
+
+
 #------------------------------------------------------------
 #----------------------------Associate-----------------------
 #------------------------------------------------------------
@@ -156,6 +158,12 @@ class MachineAPI(APIView):
         machineResult.delete()
         return Response({"msg": "Apagado com sucesso"})
 
+    def patch(self, request, pk):
+        machineResult = Machine.objects.get(id=pk)
+        serializer = MachineTable(machineResult, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 #------------------------------------------------------------
 #----------------------- GET Machine-------------------------
@@ -367,6 +375,12 @@ class ReleaseMachineAPI(APIView):
         releaseMachineTableResult.delete()
         return Response({"msg": "Apagado com sucesso"})
 
+    def patch(self, request, pk):
+        releaseMachineTableResult = ReleaseMachine.objects.get(id=pk)
+        serializer = ReleaseMachineTable(releaseMachineTableResult, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 class GetReleaseMachineAPI(APIView):
 
     def get(self, request, pk=''):
